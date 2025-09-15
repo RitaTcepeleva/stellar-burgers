@@ -16,18 +16,6 @@ import {
 } from '../../../utils/burger-api';
 import { setCookie, deleteCookie } from '../../../utils/cookie';
 
-// export const storeTokens = (refreshToken: string, accessToken: string) => {
-//   localStorage.setItem('refreshToken', String(refreshToken));
-
-//   setCookie('accessToken', String(accessToken));
-// };
-
-// export const clearTokens = () => {
-//   localStorage.removeItem('refreshToken');
-
-//   deleteCookie('accessToken');
-// };
-
 export const loginUserThunk = createAsyncThunk(
   'users/loginUser',
   async (loginData: TLoginData, thunkAPI) => {

@@ -23,5 +23,6 @@ export {
   chooseBun,
   addIngredient,
   removeIngredient,
-  replaceIngredient
+  replaceIngredient,
+  clearConstructor
 } from './constructor/constructorSlice';

@@ -9,7 +9,7 @@ import { PayloadAction } from '@reduxjs/toolkit';
 
 export const getFeedThunk = createAsyncThunk<TOrdersData>(
   'feeds/getFeeds',
-  () => getFeedsApi()
+  getFeedsApi
 );
 
 export interface FeedState {

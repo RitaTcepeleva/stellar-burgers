@@ -2,7 +2,11 @@ import { FC, useMemo } from 'react';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { useSelector, useDispatch } from '../../services/store';
-import { requestOrderThunk, clearOrderModalData } from '@slices';
+import {
+  requestOrderThunk,
+  clearOrderModalData,
+  clearConstructor
+} from '@slices';
 import { useNavigate } from 'react-router-dom';
 
 export const BurgerConstructor: FC = () => {
@@ -15,16 +19,21 @@ export const BurgerConstructor: FC = () => {
   );
   const { user } = useSelector((store) => store.user);
 
-  const onOrderClick = () => {
+  const onOrderClick = async () => {
     if (!constructorItems.bun || orderRequested) return;
-    if (!user) navigate('/login');
-    dispatch(
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+    const resultAction = await dispatch(
       requestOrderThunk([
         constructorItems.bun._id,
         ...constructorItems.ingredients.map((item) => item._id),
         constructorItems.bun._id
       ])
     );
+    if (resultAction.meta.requestStatus === 'fulfilled')
+      dispatch(clearConstructor());
   };
   const closeOrderModal = () => {
     dispatch(clearOrderModalData());
