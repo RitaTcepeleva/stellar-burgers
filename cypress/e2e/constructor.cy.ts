@@ -57,4 +57,32 @@ describe('Constructor Page tests', function () {
         );
       });
   });
+
+  it('Open ingredient modal, close by button', function () {
+    // find & click on bun item
+    cy.get('[data-testid="ingredient-bun"]').first().click();
+
+    // check modal has been opened
+    cy.get('[data-testid="modal"]').should('exist');
+
+    // click on close button (there's only one button in modal)
+    cy.get('button').click();
+
+    // check modal has been closed
+    cy.get('[data-testid="modal"]').should('not.exist');
+  });
+
+  it('Open ingredient modal, close by overlay', function () {
+    // find & click on bun item
+    cy.get('[data-testid="ingredient-bun"]').first().click();
+
+    // check modal has been opened
+    cy.get('[data-testid="modal"]').should('exist');
+
+    // click on close button (there's only one button in modal)
+    cy.get('[data-testid="overlay"]').click({ force: true });
+
+    // check modal has been closed
+    cy.get('[data-testid="modal"]').should('not.exist');
+  });
 });
