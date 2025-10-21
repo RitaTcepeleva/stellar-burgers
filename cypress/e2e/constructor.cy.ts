@@ -1,7 +1,20 @@
+import * as mockOrder from '../fixtures/order.json';
+
 describe('Constructor Page tests', function () {
   beforeEach(() => {
+    cy.setCookie('accessToken', 'accessToken');
+    localStorage.setItem('refreshToken', 'refreshToken');
+
     cy.intercept('GET', 'api/ingredients', { fixture: 'ingredients' });
+    cy.intercept('GET', 'api/auth/user', { fixture: 'user' });
+    cy.intercept('POST', 'api/orders', { fixture: 'order' });
+
     cy.visit('/');
+  });
+
+  afterEach(() => {
+    cy.clearCookie('accessToken');
+    localStorage.removeItem('refreshToken');
   });
 
   it('Add ingredients to constructor', function () {
@@ -84,5 +97,45 @@ describe('Constructor Page tests', function () {
 
     // check modal has been closed
     cy.get('[data-testid="modal"]').should('not.exist');
+  });
+
+  it('Create order', function () {
+    // find bun item from ingredients
+    cy.get('[data-testid="ingredient-bun"]').first().as('firstBun');
+
+    // click AddButton
+    cy.get('@firstBun').within(() => {
+      cy.contains('Добавить').click();
+    });
+
+    // find main item from ingredients
+    cy.get('[data-testid="ingredient-main"]').first().as('firstMain');
+
+    // click AddButton
+    cy.get('@firstMain').within(() => {
+      cy.contains('Добавить').click();
+    });
+
+    // click on order button
+    cy.get('[data-testid="order-button"]').click();
+
+    // check modal has been opened
+    cy.get('[data-testid="modal"]').should('exist');
+
+    // check order number equals to mock order number
+    cy.get('[data-testid="order-modal-number"]').should(
+      'have.text',
+      mockOrder.order.number
+    );
+
+    // click on close button (there's only one button in modal)
+    cy.get('[data-testid="overlay"]').click({ force: true });
+
+    // check modal has been closed
+    cy.get('[data-testid="modal"]').should('not.exist');
+
+    // empty constructor
+    cy.get('[data-no-ingredients]').should('exist');
+    cy.get('[data-no-buns]').should('exist');
   });
 });
