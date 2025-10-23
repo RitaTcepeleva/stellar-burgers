@@ -72,31 +72,59 @@ describe('Constructor Page tests', function () {
   });
 
   it('Open ingredient modal, close by button', function () {
-    // find & click on bun item
-    cy.get('[data-testid="ingredient-bun"]').first().click();
+    // find bun item
+    cy.get('[data-testid="ingredient-bun"]').first().as('firstBun');
 
-    // check modal has been opened
-    cy.get('[data-testid="modal"]').should('exist');
+    cy.get('@firstBun')
+      .find('p.text_type_main-default')
+      .invoke('text')
+      .then((name) => {
+        // click on chosen bun
+        cy.get('@firstBun').click();
 
-    // click on close button (there's only one button in modal)
-    cy.get('button').click();
+        // check modal has been opened
+        cy.get('[data-testid="modal"]').should('exist');
 
-    // check modal has been closed
-    cy.get('[data-testid="modal"]').should('not.exist');
+        // compare titles (ingredient card & modal card)
+        cy.get('[data-testid="ingredient-title"]').should(
+          'have.text',
+          name.trim()
+        );
+
+        // click on close button (there's only one button in modal)
+        cy.get('button').click();
+
+        // check modal has been closed
+        cy.get('[data-testid="modal"]').should('not.exist');
+      });
   });
 
   it('Open ingredient modal, close by overlay', function () {
-    // find & click on bun item
-    cy.get('[data-testid="ingredient-bun"]').first().click();
+    // find bun item
+    cy.get('[data-testid="ingredient-bun"]').first().as('firstBun');
 
-    // check modal has been opened
-    cy.get('[data-testid="modal"]').should('exist');
+    cy.get('@firstBun')
+      .find('p.text_type_main-default')
+      .invoke('text')
+      .then((name) => {
+        // click on chosen bun
+        cy.get('@firstBun').click();
 
-    // click on close button (there's only one button in modal)
-    cy.get('[data-testid="overlay"]').click({ force: true });
+        // check modal has been opened
+        cy.get('[data-testid="modal"]').should('exist');
 
-    // check modal has been closed
-    cy.get('[data-testid="modal"]').should('not.exist');
+        // compare titles (ingredient card & modal card)
+        cy.get('[data-testid="ingredient-title"]').should(
+          'have.text',
+          name.trim()
+        );
+
+        // click on close button (there's only one button in modal)
+        cy.get('[data-testid="overlay"]').click({ force: true });
+
+        // check modal has been closed
+        cy.get('[data-testid="modal"]').should('not.exist');
+      });
   });
 
   it('Create order', function () {
